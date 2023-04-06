@@ -8,6 +8,8 @@ const searchQueryForm = document.getElementById('search-form');
 const searchQuery = document.getElementById('search-query');
 const loadMoreBtn = document.querySelector('.load-more');
 
+let defaultEmptySearchField = '';
+
 searchQueryForm .addEventListener('submit', formSubmitSent);
 
 // получаем массив фоток и на их основании добавляем разметку в чать Gallery
@@ -45,7 +47,8 @@ function photoSerch(photos) {
 
 // функция очистки формы при поиске по новому ключевому слову
 
-function clearForm () {
+function clearGallery () {
+
     gallery.innerHTML = '';
 }
 
@@ -64,12 +67,15 @@ function formSubmitSent (event) {
     // чтоб страница не перезагружалась при каждом запросе
     event.preventDefault(); 
 
+    clearGallery();
+
+    defaultEmptySearchField = event.currentTarget.searchQuery.value.trim();
+       
+
     fetchPhotos(searchQuery.value.trim(), 1).then((response) => {
         photoSerch(response.data.hits);
     });
-
-
-
-
-
+    if (defaultEmptySearchField === '') {    
+        return Notiflix.Notify.info('Your query is empty, please enter data to search.');    
+      };  
 }
